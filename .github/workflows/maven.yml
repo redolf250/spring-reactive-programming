@@ -41,7 +41,7 @@ jobs:
     - name: Install with Maven
       run: mvn -B install --file pom.xml
 
-    package-job:
+  package-job:
       runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v3
