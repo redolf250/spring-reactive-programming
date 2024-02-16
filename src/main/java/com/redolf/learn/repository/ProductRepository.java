@@ -63,6 +63,14 @@ public class ProductRepository {
         return fruits.concatWith(veggies).log();
     }
 
+    public Flux<String> fruitFluxMerge(){
+        var fruits = Flux.just("Mango","Orange")
+                .delayElements(Duration.ofMillis(new Random().nextInt(50)));
+        var veggies = Flux.just("Carrot","Cabbage")
+                .delayElements(Duration.ofMillis(new Random().nextInt(75)));;
+        return Flux.merge(fruits,veggies).log();
+    }
+
     public Mono<Product> productMono(){
         return Mono.just(new Product(1,200,"Royal Aroma 4.5kg")).log();
     }
