@@ -71,6 +71,13 @@ public class ProductRepository {
         return Flux.merge(fruits,veggies).log();
     }
 
+    public Flux<String> fruitFluxZip(){
+        var fruits = Flux.just("Mango","Orange");
+        var veggies = Flux.just("Carrot","Cabbage");
+        return Flux.zip(fruits,veggies,(first,second)->first+second).log();
+    }
+
+
     public Mono<Product> productMono(){
         return Mono.just(new Product(1,200,"Royal Aroma 4.5kg")).log();
     }

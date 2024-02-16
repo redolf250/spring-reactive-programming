@@ -75,6 +75,13 @@ class ProductRepositoryTest {
 //    }
 
     @Test
+    void  fruitFluxZip(){
+        StepVerifier.create(repository.fruitFluxZip())
+                .expectNext("MangoCarrot","OrangeCabbage")
+                .verifyComplete();
+    }
+
+    @Test
     void productMono() {
     }
 
