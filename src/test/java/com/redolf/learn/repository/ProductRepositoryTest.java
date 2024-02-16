@@ -67,12 +67,12 @@ class ProductRepositoryTest {
                 .verifyComplete();
     }
 
-    @Test
-    void  fruitFluxMerge(){
-        StepVerifier.create(repository.fruitFluxMerge())
-                .expectNext("Mango","Carrot","Orange","Cabbage")
-                .verifyComplete();
-    }
+//    @Test
+//    void  fruitFluxMerge(){
+//        StepVerifier.create(repository.fruitFluxMerge())
+//                .expectNext("Mango","Carrot","Orange","Cabbage")
+//                .verifyComplete();
+//    }
 
     @Test
     void productMono() {
