@@ -57,6 +57,12 @@ public class ProductRepository {
         return Flux.concat(fruits,veggies).log();
     }
 
+    public Flux<String> fruitFluxConcatWith(){
+        var fruits = Flux.just("Mango","Orange");
+        var veggies = Flux.just("Carrot","Cabbage");
+        return fruits.concatWith(veggies).log();
+    }
+
     public Mono<Product> productMono(){
         return Mono.just(new Product(1,200,"Royal Aroma 4.5kg")).log();
     }

@@ -61,6 +61,13 @@ class ProductRepositoryTest {
     }
 
     @Test
+    void  fruitFluxConcatWith(){
+        StepVerifier.create(repository.fruitFluxConcatWith())
+                .expectNext("Mango","Orange","Carrot","Cabbage")
+                .verifyComplete();
+    }
+
+    @Test
     void productMono() {
     }
 
