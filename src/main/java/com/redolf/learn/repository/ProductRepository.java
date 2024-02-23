@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +19,15 @@ public class ProductRepository {
         productList.add(new Product(1,200,"Royal Aroma 4.5kg"));
         productList.add(new Product(2,250,"Royal Aroma 5kg"));
         productList.add(new Product(3,100,"Frytol Oilers 3.5g"));
-        return Flux.fromIterable(productList).log();
+        productList.add(new Product(1,200,"Royal Aroma 4.5kg"));
+        productList.add(new Product(2,250,"Royal Aroma 5kg"));
+        productList.add(new Product(3,100,"Frytol Oilers 3.5g"));
+        productList.add(new Product(1,200,"Royal Aroma 4.5kg"));
+        productList.add(new Product(2,250,"Royal Aroma 5kg"));
+        productList.add(new Product(3,100,"Frytol Oilers 3.5g"));
+        return Flux.fromIterable(productList)
+                .delayElements(Duration.ofMillis(1000))
+                .log();
     }
 
     public Flux<String> fruitFlux(){
@@ -77,15 +86,52 @@ public class ProductRepository {
         return Flux.zip(fruits,veggies,(first,second)->first+second).log();
     }
 
+    public Flux<String> fruitFluxOnErrorMap(){
+        return Flux.just("Mango","Orange","Carrot","Cabbage")
+                .<String>handle((s, sink) -> {
+                    if (s.equalsIgnoreCase("Orange")) {
+                        sink.error(new RuntimeException("Bad fruit flavor"));
+                        return;
+                    }
+                    sink.next(s.toUpperCase());
+                }).onErrorMap(throwable -> {
+                    System.out.println(throwable.getMessage());
+                   return new IllegalAccessException();
+                });
+    }
+
+    public Flux<String> fruitFluxDoOnError(){
+        return Flux.just("Mango","Orange","Carrot","Cabbage")
+                .<String>handle((s, sink) -> {
+                    if (s.equalsIgnoreCase("Orange")) {
+                        sink.error(new RuntimeException("Bad fruit flavor"));
+                        return;
+                    }
+                    sink.next(s.toUpperCase());
+                }).doOnError(throwable -> {
+                    System.out.println(throwable.getMessage());
+                });
+    }
 
     public Mono<Product> productMono(){
         return Mono.just(new Product(1,200,"Royal Aroma 4.5kg")).log();
     }
 
+    public Flux<Integer> multiplyByFive(){
+        return Flux.just(1,2,3,4,5)
+                .map(integer -> integer * 5)
+                .map(integer -> integer * 5)
+                .flatMap(Flux::just)
+                .doOnComplete(() -> System.out.println("done!!!"))
+                .log();
+    }
+
     public static void main(String[] args) {
         ProductRepository repository = new ProductRepository();
-        repository.productList().subscribe(product -> {
-            System.out.println("product = " + product);
-        });
+//        repository.productList().subscribe(product -> {
+//            System.out.println("product = " + product);
+//        });
+
+        repository.multiplyByFive().subscribe(System.out::println);
     }
 }

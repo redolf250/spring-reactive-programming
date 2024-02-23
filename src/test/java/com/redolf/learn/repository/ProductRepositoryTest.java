@@ -2,10 +2,13 @@ package com.redolf.learn.repository;
 
 import com.redolf.learn.model.Product;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -79,6 +82,22 @@ class ProductRepositoryTest {
         StepVerifier.create(repository.fruitFluxZip())
                 .expectNext("MangoCarrot","OrangeCabbage")
                 .verifyComplete();
+    }
+
+    @Test
+    void fruitFluxOnErrorMap(){
+        StepVerifier.create(repository.fruitFluxOnErrorMap())
+                .expectNext("MANGO")
+                .expectError(IllegalAccessException.class)
+                .verify();
+    }
+
+    @Test
+    void fruitFluxDoOnError(){
+        StepVerifier.create(repository.fruitFluxDoOnError())
+                .expectNext("MANGO")
+                .expectError(RuntimeException.class)
+                .verify();
     }
 
     @Test
